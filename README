@@ -2,24 +2,16 @@ Requirements
 1. Use the Forecast.io API to obtain forecast data for Norfolk, VA.
 2. Build the following website states with animated transitions bridging each section:
    a. State 1. Intro/title screen
-   b. State 2. Seven “cards” representing the next 7 upcoming days forecasted for Norfolk
-animate in. Each card should contain imagery/icons for the current weather state along with
-pertinent information like temp, precipitation %, etc.
+   b. State 2. Seven “cards” representing the next 7 upcoming days forecasted for Norfolk animate in. Each card should contain imagery/icons for the current weather state along with pertinent information like temp, precipitation %, etc.
    c. State 3. Clicking on a card flips and enlarges the given day to show the 10-hour forecast.
 3. Please use the following frameworks/technologies: React, Gulp, SASS.
-4. Only concentrate on a single browser (Chrome) rather than make the site fully cross-browser
-compatible. Be prepared to talk about challenges that you would expect to encounter if you went on
-to make the site fully compatible.
+4. Only concentrate on a single browser (Chrome) rather than make the site fully cross-browser compatible. Be prepared to talk about challenges that you would expect to encounter if you went on to make the site fully compatible.
 5. Delivery should include links to both the staged website and code repository.
 
 Extra Credit
 1. Include a “refresh” button that asynchronously calls the data source for new information.
-2. Asynchronously refresh the data on the page every 2 minutes, updating a “Last updated” footnote
-with the date/time.
+2. Asynchronously refresh the data on the page every 2 minutes, updating a “Last updated” footnote with the date/time.
 3. Make website responsive for mobile.
 4. Adjust the styles/imagery of the website to reflect the average weather for a given week.
-5. An input field allows the user to enter the zipcode for a second city. This triggers an additional 7 more
-cards to animate on-screen, allowing the user to compare each day to Norfolk, including
-simultaneous card flips of a given day’s forecast.
-6. Integrate browser's back button. When user hits back button, the URL should change and the user is
-taken back through the different states of the site without the browser actually leaving the page.
+5. An input field allows the user to enter the zipcode for a second city. This triggers an additional 7 more cards to animate on-screen, allowing the user to compare each day to Norfolk, including simultaneous card flips of a given day’s forecast.
+6. Integrate browser's back button. When user hits back button, the URL should change and the user is taken back through the different states of the site without the browser actually leaving the page.
