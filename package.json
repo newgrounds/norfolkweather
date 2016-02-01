@@ -1,0 +1,39 @@
+{
+  "name": "norfolkweather",
+  "version": "1.0.0",
+  "description": "Norfolk Weather",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newgrounds/norfolkweather.git"
+  },
+  "keywords": [
+    "norfolk",
+    "norfolkweather",
+    "norfolkva",
+    "grow"
+  ],
+  "author": "Adam Gressen",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/newgrounds/norfolkweather/issues"
+  },
+  "homepage": "https://github.com/newgrounds/norfolkweather",
+  "private": "true",
+  "devDependencies": {
+    "classnames": "^2.2.3",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-connect": "^2.2.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-notify": "^2.2.0",
+    "gulp-sass": "^2.0.4",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "reactify": "^1.1.1",
+    "sass": "^0.5.0"
+  }
+}

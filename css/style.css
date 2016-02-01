@@ -1,0 +1,148 @@
+* {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none; }
+
+body {
+  background-color: #28282e; }
+
+.page-wrap {
+  width: 100%;
+  float: right;
+  transition: width 0.3s ease; }
+  .page-wrap a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 2em; }
+
+.head-wrap {
+  position: fixed;
+  z-index: 5;
+  background: linear-gradient(rgba(40, 40, 46, 0.6), rgba(40, 40, 46, 0.4));
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: left 0.3s ease; }
+
+#logo {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 3em;
+  font-weight: 300;
+  padding-left: 15px;
+  line-height: 2em; }
+
+#favorite {
+  position: relative;
+  float: right;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  color: gold;
+  font-size: 4em;
+  z-index: 5;
+  /* when a valid draggable is hovering around */ }
+  #favorite.drop-hover {
+    color: #77DD77;
+    /* when dropping will remove from favorites */ }
+    #favorite.drop-hover.remove {
+      color: #DD7777; }
+
+.details {
+  padding: 10px;
+  color: white; }
+  .details p {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    -o-user-select: text;
+    user-select: text; }
+
+#container {
+  top: 100px;
+  display: block;
+  position: relative;
+  width: 100%; }
+
+/* entire container, keeps perspective */
+.flip-container {
+  perspective: 1000;
+  width: 20%;
+  float: left;
+  transition: height 0.3s ease, width 0.3s ease;
+  animation-duration: 0.5s;
+  moz-animation-duration: 0.5s;
+  webkit-animation-duration: 0.5s;
+  ms-animation-duration: 0.5s; }
+
+@media screen and (max-width: 1000px) {
+  .flip-container {
+    width: 25%; } }
+
+@media screen and (max-width: 800px) {
+  .flip-container {
+    width: 33.33%; } }
+
+@media screen and (max-width: 600px) {
+  .flip-container {
+    width: 50%; } }
+
+@media screen and (max-width: 400px) {
+  .flip-container {
+    width: 100%; }
+  #logo {
+    font-size: 2em; }
+  #favorite {
+    font-size: 2.3em; } }
+
+/* flip the pane when flippy is active */
+.flip-container.flippy .flipper {
+  transform: rotateY(180deg); }
+
+/* flip speed goes here */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative; }
+  .flipper:before {
+    content: "";
+    display: block;
+    padding-top: 100%; }
+
+/* hide back of pane during swap */
+.front, .back {
+  -webkit-backface-visibility: hidden;
+  /* Chrome, Safari, Opera */
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: #ddd; }
+
+/* front pane, placed above back */
+.front {
+  z-index: 2;
+  /* for firefox 31 */
+  transform: rotateY(0deg); }
+  .front img {
+    width: 100%;
+    height: auto; }
+
+/* back, initially hidden pane */
+.back {
+  transform: rotateY(180deg);
+  font-weight: 0; }
+
+#footnote {
+  position: fixed;
+  bottom: 0;
+  color: #ddd; }
