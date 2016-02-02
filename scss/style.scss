@@ -47,6 +47,10 @@ $anim-speed: 0.3s;
     text-align: center;
 }
 
+#container {
+    overflow: hidden;
+}
+
 #logo {
     color: #ddd;
     display: inline-block;
@@ -88,7 +92,6 @@ $anim-speed: 0.3s;
 .intro {
     width: 50%;
     margin: 20% auto;
-    height: 200px;
     color: #ddd;
     font-size: 2em;
     text-align: center;
@@ -172,7 +175,7 @@ $anim-speed: 0.3s;
     &:before {
         content: "";
         display: block;
-        padding-top: 100%;
+        padding-top: 62%;
     }
 }
 

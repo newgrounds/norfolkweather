@@ -19233,6 +19233,8 @@ Weather = (function () {
             render: function () {
                 var flipClass = classNames({
                     'flip-container': true,
+                    'animated': true,
+                    'fadeInUp': true,
                     'flippy': this.state.isFlipped
                 });
                 

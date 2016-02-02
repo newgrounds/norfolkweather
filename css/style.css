@@ -31,6 +31,9 @@ body {
   transition: left 0.3s ease;
   text-align: center; }
 
+#container {
+  overflow: hidden; }
+
 #logo {
   color: #ddd;
   display: inline-block;
@@ -66,7 +69,6 @@ body {
 .intro {
   width: 50%;
   margin: 20% auto;
-  height: 200px;
   color: #ddd;
   font-size: 2em;
   text-align: center; }
@@ -134,7 +136,7 @@ body {
   .flipper:before {
     content: "";
     display: block;
-    padding-top: 100%; }
+    padding-top: 62%; }
 
 .flipper:hover {
   background: linear-gradient(rgba(30, 30, 36, 0.6), rgba(30, 30, 36, 0.4)); }
