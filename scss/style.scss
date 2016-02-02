@@ -32,6 +32,10 @@ $anim-speed: 0.3s;
     background: linear-gradient(rgba(40,40,46,0.6), rgba(40,40,46,0.4));
 }
 
+@mixin light-bg-gradient {
+    background: linear-gradient(rgba(30,30,36,0.6), rgba(30,30,36,0.4));
+}
+
 .head-wrap {
     position: fixed;
     z-index: 5;
@@ -51,25 +55,14 @@ $anim-speed: 0.3s;
     line-height: 2em;
 }
 
-#favorite {
-    position: relative;
-    float: right;
+#refresher {
+    position: fixed;
     top: 0;
     right: 0;
     padding: 10px;
-    color: gold;
+    color: #ddd;
     font-size: 4em;
     z-index: 5;
-    
-    /* when a valid draggable is hovering around */
-    &.drop-hover {
-        color: #77DD77;
-        
-        /* when dropping will remove from favorites */
-        &.remove {
-            color: #DD7777;
-        }
-    }
 }
 
 .details {
@@ -105,6 +98,12 @@ $anim-speed: 0.3s;
     background-color: 'transparent';
     border: 2px solid #ddd;
     border-radius: 8px;
+    transition-duration: $anim-speed;
+    -webkit-transition-duration: $anim-speed;
+}
+.start-button:hover {
+    background-color: #ddd;
+    color: #0c2e4f;
 }
 
 /* entire container, keeps perspective */
@@ -112,8 +111,9 @@ $anim-speed: 0.3s;
     perspective: 1000;
     width: 25%;
     float: left;
-    transition: height $anim-speed ease, width $anim-speed ease top $anim-speed ease left $anim-speed ease;
+    text-align: center;
     
+    transition: height $anim-speed ease, width $anim-speed ease top $anim-speed ease left $anim-speed ease;
     animation-duration: 0.5s;
     moz-animation-duration: 0.5s;
     webkit-animation-duration: 0.5s;
@@ -144,7 +144,7 @@ $anim-speed: 0.3s;
         font-size: 2em;
     }
     
-    #favorite {
+    #refresher {
         font-size: 2.3em;
     }
 }
@@ -167,12 +167,17 @@ $anim-speed: 0.3s;
     margin: 10px;
     border: 2px solid #ddd;
     border-radius: 8px;
+    @include bg-gradient;
     
     &:before {
         content: "";
         display: block;
         padding-top: 100%;
     }
+}
+
+.flipper:hover {
+    @include light-bg-gradient;
 }
 
 /* hide back of pane during swap */
@@ -194,6 +199,12 @@ $anim-speed: 0.3s;
     z-index: 2;
     /* for firefox 31 */
     transform: rotateY(0deg);
+    .date-line {
+        font-size: 2em;
+    }
+    .icon-line {
+        font-size: 2em;
+    }
 }
 
 /* back, initially hidden pane */
@@ -202,7 +213,7 @@ $anim-speed: 0.3s;
     font-weight: 0;
 }
 
-#footnote {
+.update-time {
     position: fixed;
     width: 100%;
     text-align: center;

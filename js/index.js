@@ -19067,6 +19067,11 @@ Weather = (function () {
         $(obj.currentTarget).toggleClass('flippy');
     }
     
+    // convert number to percent
+    function toPercent(num) {
+        return Math.floor(num * 100);
+    }
+    
     // format date from timestamp
     function formatDate (ts) {
         return new Date(ts * 1000);
@@ -19130,31 +19135,6 @@ Weather = (function () {
         return "wi " + iconMap[iconName];
     }
     
-    /* BEGIN COLOR GEN */
-    // generate a random color
-    function generateRandomColor () {
-        return Math.floor(((Math.random() * 16777215) + 16777215) / 2).toString(16);
-    }
-    
-    function contrastingColor (color) {
-        return (luma(color) >= 165) ? '000' : 'fff';
-    }
-    function luma (color) { // color can be a hx string or an array of RGB values 0-255
-        var rgb = (typeof color === 'string') ? hexToRGBArray(color) : color;
-        return (0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2]); // SMPTE C, Rec. 709 weightings
-    }
-    function hexToRGBArray (color) {
-        if (color.length === 3)
-            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
-        else if (color.length !== 6)
-            throw('Invalid hex color: ' + color);
-        var rgb = [];
-        for (var i = 0; i <= 2; i++)
-            rgb[i] = parseInt(color.substr(i * 2, 2), 16);
-        return rgb;
-    }
-    /* END COLOR GEN */
-    
     // retrieve forecast for given location
     function retrieveForecast(loc) {
         return $.ajax({
@@ -19165,35 +19145,37 @@ Weather = (function () {
     
     // setup the page
     function setup () {
+        // the front of the card
         var Front = React.createClass({displayName: "Front",
             render: function () {
                 var precip;
-                if (this.props.day.precipType !== null) {
-                    precip = this.props.day.precipType + " " + this.props.day.precipProbability;
+                if (this.props.day.precipType) {
+                    precip = toPercent(this.props.day.precipProbability) + "% chance of " + this.props.day.precipType;
                 } else {
-                    precip = "Precipitation " + this.props.day.precipProbability;
+                    precip = toPercent(this.props.day.precipProbability) + "% chance of precipitation";
                 }
                 
                 return (
                     React.createElement("div", {className: "front"}, 
-                        React.createElement("p", null, timeStampHelper(this.props.day.time).split(" ")[0]), 
+                        React.createElement("div", {className: "date-line"}, timeStampHelper(this.props.day.time).split(" ")[0]), 
                         React.createElement("p", null, this.props.day.summary), 
-                        React.createElement("p", null, React.createElement("i", {className: convertIcon(this.props.day.icon)})), 
-                        React.createElement("p", null, this.props.day.temperatureMax, " at ", timeStampHelper(this.props.day.temperatureMaxTime)), 
-                        React.createElement("p", null, this.props.day.temperatureMin, " at ", timeStampHelper(this.props.day.temperatureMinTime)), 
+                        React.createElement("div", {className: "icon-line"}, React.createElement("i", {className: convertIcon(this.props.day.icon)})), 
+                        React.createElement("p", null, "High ", this.props.day.temperatureMax, "° @ ", timeStampHelper(this.props.day.temperatureMaxTime).split(" ").splice(1).join(" ")), 
+                        React.createElement("p", null, "Low ", this.props.day.temperatureMin, "° @ ", timeStampHelper(this.props.day.temperatureMinTime).split(" ").splice(1).join(" ")), 
                         React.createElement("p", null, precip)
                     )
                 );
             }
         });
         
+        // each hour of the 10 hours per day
         var Hour = React.createClass({displayName: "Hour",
             render: function () {
                 var precip;
-                if (this.props.hour.precipType !== null) {
-                    precip = this.props.hour.precipType + " " + this.props.hour.precipProbability;
+                if (this.props.hour.precipType) {
+                    precip = toPercent(this.props.hour.precipProbability) + "% chance of " + this.props.hour.precipType;
                 } else {
-                    precip = "Precipitation " + this.props.hour.precipProbability;
+                    precip = toPercent(this.props.hour.precipProbability) + "% chance of precipitation";
                 }
                 
                 return (
@@ -19209,18 +19191,15 @@ Weather = (function () {
             }
         });
         
+        // the back of the card
         var Back = React.createClass({displayName: "Back",
             render: function () {
-                // generate colors for the background & text
-                var col = generateRandomColor();
-                var textCol = contrastingColor(col);
-                
                 var backStyle = {
-                    'backgroundColor': '#' + col
+                    'backgroundColor': '#000'
                 };
                 
                 var detailsStyle = {
-                    color: '#' + textCol
+                    color: '#ddd'
                 };
                 
                 // hours for this day
@@ -19239,6 +19218,7 @@ Weather = (function () {
             }
         });
 
+        // the part that allows flipping to happen
         var Flipper = React.createClass({displayName: "Flipper",
             getInitialState: function () {
                 return {
@@ -19268,13 +19248,37 @@ Weather = (function () {
                 );
             }
         });
-
+        
+        // keeps track of last updated time
+        var Updater = React.createClass({displayName: "Updater",
+            render: function () {
+                return (
+                    React.createElement("div", {className: "update-time"}, 
+                        "Last updated ", this.props.time
+                    )
+                );
+            }
+        });
+        
+        // tells the data to refresh
+        var Refresher = React.createClass({displayName: "Refresher",
+            render: function () {
+                return (
+                    React.createElement("div", {id: "refresher", onClick: this.props.onClick}, 
+                        React.createElement("i", {className: "fa fa-refresh"})
+                    )
+                );
+            }
+        });
+        
+        // parent component
         var WeatherCards = React.createClass({displayName: "WeatherCards",
             getInitialState: function () {
                 return {
                     intro: true,
                     days: [],
-                    hours: []
+                    hours: [],
+                    time: ""
                 }
             },
             getForecast: function () {
@@ -19291,7 +19295,8 @@ Weather = (function () {
                         $(".spinner").css({'opacity': 0});
                         this.setState({
                             days: forecast.daily.data,
-                            hours: forecast.hourly.data
+                            hours: forecast.hourly.data,
+                            time: timeStamp(new Date())
                         });
                     }.bind(this),
                     function (fail) {
@@ -19302,6 +19307,12 @@ Weather = (function () {
                         });
                     }.bind(this)
                 );
+            },
+            componentDidMount: function () {
+                // reload data every 2 minutes
+                window.setInterval(function () {
+                    this.getForecast();
+                }.bind(this), 120000);
             },
             render: function () {
                 // create dictionary of days to hours for each day
@@ -19338,31 +19349,18 @@ Weather = (function () {
                 else {
                     return (
                         React.createElement("div", null, 
-                            rows
+                            React.createElement(Refresher, {onClick: this.getForecast}), 
+                            rows, 
+                            React.createElement(Updater, {time: this.state.time})
                         )
                     );
                 }
-            }
-        });
-
-        var Updater = React.createClass({displayName: "Updater",
-            render: function () {
-                var time = timeStamp(new Date());
-                return (
-                    React.createElement("div", null, 
-                        "Last Updated: ", time
-                    )
-                );
             }
         });
          
         ReactDOM.render(
             React.createElement(WeatherCards, null),
             document.getElementById('container')
-        );
-        ReactDOM.render(
-            React.createElement(Updater, null),
-            document.getElementById('footnote')
         );
     }
     
