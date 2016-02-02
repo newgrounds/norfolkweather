@@ -43,6 +43,7 @@ gulp.task('lint', function () {
 gulp.task('sass', function () {
     return gulp.src('scss/*.scss')
         .pipe(sass())
+        .on('error', handleErrors)
         .pipe(gulp.dest('css'))
         .pipe(connect.reload());
 });
