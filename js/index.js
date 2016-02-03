@@ -19132,7 +19132,12 @@ Weather = (function () {
     
     // return weather icon from forecast.io icon name
     function convertIcon (iconName) {
-        return "wi " + iconMap[iconName];
+        var foundIcon = iconMap[iconName];
+        if (foundIcon) {
+            return "wi " + iconMap[iconName];
+        } else {
+            return "wi wi-forecast-io-clear-day";
+        }
     }
     
     /*
@@ -19328,9 +19333,11 @@ Weather = (function () {
                 
                 // hours for this day
                 var rows = [];
-                this.props.hours.forEach(function (hour) {
-                    rows.push(React.createElement(Hour, {hour: hour, key: hour.time}));
-                });
+                if (this.props.hours) {
+                    this.props.hours.forEach(function (hour) {
+                        rows.push(React.createElement(Hour, {hour: hour, key: hour.time}));
+                    });
+                }
                 
                 return (
                     React.createElement("div", {className: "back", style: backStyle}, 
