@@ -9,8 +9,10 @@
   -o-user-select: none;
   user-select: none; }
 
-body {
-  background-color: #0c2e4f; }
+html, body {
+  background-color: #0c2e4f;
+  height: 100%;
+  width: 100%; }
 
 .page-wrap {
   width: 100%;
@@ -117,8 +119,7 @@ body {
     font-size: 2.3em; } }
 
 .flip-container.flippy {
-  z-index: 1000;
-  background-color: 'black'; }
+  z-index: 1000; }
 
 /* flip the pane when flippy is active */
 .flip-container.flippy .flipper {
@@ -136,10 +137,48 @@ body {
   .flipper:before {
     content: "";
     display: block;
-    padding-top: 62%; }
+    padding-top: 75%; }
 
 .flipper:hover {
   background: linear-gradient(rgba(30, 30, 36, 0.6), rgba(30, 30, 36, 0.4)); }
+
+/* Display clone when flipping */
+#cardClone {
+  position: fixed;
+  display: none;
+  margin: 30px;
+  width: 200px;
+  height: 200px;
+  -webkit-transition: 0.6s;
+  transition: 0.6s;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  z-index: 99;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  text-align: center; }
+
+#cloneFront, #cloneBack {
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -webkit-transition: 0.6s;
+  transition: 0.6s;
+  overflow: hidden;
+  background-color: #0c2e4f; }
+
+#cloneFront {
+  z-index: 100;
+  transform: translatez(0); }
+
+#cloneBack {
+  transform: rotateY(-180deg);
+  z-index: 101;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #0c2e4f;
+  overflow-y: scroll; }
 
 /* hide back of pane during swap */
 .front, .back {
@@ -153,7 +192,8 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  color: #ddd; }
+  color: #ddd;
+  line-height: 2em; }
 
 /* front pane, placed above back */
 .front {
@@ -169,6 +209,15 @@ body {
 .back {
   transform: rotateY(180deg);
   font-weight: 0; }
+
+/* our hour holder */
+.hour-holder {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 10px;
+  padding: 5px;
+  width: 20%; }
 
 .update-time {
   position: fixed;

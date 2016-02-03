@@ -27,12 +27,10 @@ Weather = (function () {
     function formatDate (ts) {
         return new Date(ts * 1000);
     }
-    
     // convert ts to date and then format
     function timeStampHelper (ts) {
         return timeStamp(formatDate(ts));
     }
-    
     /**
      * Return a timestamp with the format "m/d/yy h:MM:ss TT"
      * @type {Date}
@@ -86,6 +84,130 @@ Weather = (function () {
         return "wi " + iconMap[iconName];
     }
     
+    /*
+     * BEGIN cloning
+     */
+    // cache the clone
+    var $clone = $('#cardClone');
+    // store clicked card so we can track it
+    var $lastelement = "";
+    // set up object for last clicked element so we know where to return to on collapse
+    var lastelement = {
+        'top': 0,
+        'left': 0,
+        'width': 0,
+        'height': 0
+    };
+    // the current flip state of the clone
+    var cloneflipped = false;
+    
+    // bind handler to the clone to detect when the transition ends
+    $('#cardClone').on("transitionend webkitTransitionEnd oTransitionEnd", function (e) {
+        if (e.target === e.currentTarget) {
+            if (e.originalEvent.propertyName == 'top') {
+                // toggle clone state
+                cloneflipped = !cloneflipped;
+                
+                // detect when clone returns to original position, then hide it
+                if (!cloneflipped) {
+                    $($lastelement).css('opacity', 1);
+                    $($clone).hide();
+                } else {
+                    // dynamically alter contents of the clone rear AFTER it animates here
+                    //$('#cloneBack').html('hi');
+                }
+            }
+        }
+    });
+    
+    // tony hawk's pro skater
+    // do a sick click flip to trigger the flip when you click
+    // went with this approach when I couldn't get it done in React
+    // http://stackoverflow.com/questions/24503882/the-google-cards-flip-and-grow-effect
+    function clickFlip (obj) {
+        if (!cloneflipped) {
+            //Cache clicked card
+            $lastelement = $(obj);
+
+            // store position of this element for the return trip
+            var offset = $lastelement.offset();
+            lastelement.top = offset.top - 30 - $(document).scrollTop();
+            lastelement.left = offset.left - 30;
+            lastelement.width = $lastelement.width();
+            lastelement.height = $lastelement.height();
+
+            // check if clicked card is further left or right of the screen
+            // we can rotate inwards toward the center
+            var rotatefront = "rotateY(180deg)";
+            var rotateback = "rotateY(0deg)";
+            if ((lastelement.left + lastelement.width / 2) > $(window).width() / 2) {
+                rotatefront = "rotateY(-180deg)";
+                rotateback = "rotateY(-360deg)";
+            }
+
+            // copy clicked card contents onto the clone's front
+            $clone.find('#cloneFront').html($lastelement.html());
+
+            // show clone on top of clicked card and hide clicked card
+            $clone.css({
+                'display': 'block',
+                'top': lastelement.top,
+                'left': lastelement.left
+            });
+            $lastelement.css('opacity', 0);
+
+            // dynamically alter contents of the clone rear BEFORE it animates here
+            $('#cloneBack').html($lastelement.find(".back").html());
+
+            // flip card while centering it on the screen
+            // must wait for clone to finish drawing, so delay it 100ms
+            setTimeout(function () {
+                $clone.css({
+                    'top': '10%',
+                    'left': '40px',
+                    'height': '75%',
+                    'width': $(document).width() - 120 + 'px'
+                });
+                $clone.find('#cloneFront').css({
+                    'transform': rotatefront
+                });
+                $clone.find('#cloneBack').css({
+                    'transform': rotateback
+                });
+            }, 100);
+        } else {
+            $('body').click();
+        }
+    }
+    
+    // switch from hourly back to daily
+    function unflip (e) {
+        if (cloneflipped) {
+            if (e.target === e.currentTarget) {
+                //Reverse the animation
+                $clone.css({
+                    'top': lastelement.top + 'px',
+                    'left': lastelement.left + 'px',
+                    'height': lastelement.height + 'px',
+                    'width': lastelement.width + 'px'
+                });
+                $clone.find('#cloneFront').css({
+                    'transform': 'rotateY(0deg)'
+                });
+                $clone.find('#cloneBack').css({
+                    'transform': 'rotateY(-180deg)'
+                });
+            }
+        }
+    }
+    
+    // return to default when user clicks outside of card
+    $('body').click(unflip);
+    $('.head-wrap').click(unflip);
+    /*
+     * END cloning
+     */
+    
     // retrieve forecast for given location
     function retrieveForecast(loc) {
         return $.ajax({
@@ -130,7 +252,7 @@ Weather = (function () {
                 }
                 
                 return (
-                    <div>
+                    <div className="hour-holder">
                         <p>{timeStampHelper(this.props.hour.time)}</p>
                         <p>{this.props.hour.summary}</p>
                         <p>{this.props.hour.icon}</p>
@@ -171,31 +293,35 @@ Weather = (function () {
 
         // the part that allows flipping to happen
         var Flipper = React.createClass({
-            getInitialState: function () {
+            /*getInitialState: function () {
                 return {
                     isFlipped: false
                 }
-            },
+            },*/
             flip: function () {
-                this.setState({
+                /*this.setState({
                     isFlipped: !this.state.isFlipped
-                });
+                });*/
+                var d = $(ReactDOM.findDOMNode(this)).find(".flip-container")[0];
+                clickFlip(d);
+                this.props.dayClick(this);
             },
             render: function () {
-                var flipClass = classNames({
+                var stayClass = classNames({
                     'flip-container': true,
                     'animated': true,
-                    'fadeInUp': true,
-                    'flippy': this.state.isFlipped
+                    'fadeInUp': true/*,
+                    'flippy': this.state.isFlipped/*,
+                    'hidden': this.state.isFlipped*/
                 });
                 
                 return (
-                    <div
-                        className={flipClass}
-                        onClick={this.flip}>
-                        <div className="flipper">
-                            <Front day={this.props.day} />
-                            <Back hours={this.props.hours} />
+                    <div>
+                        <div className={stayClass} onClick={this.flip}>
+                            <div className="flipper">
+                                <Front day={this.props.day} />
+                                <Back hours={this.props.hours} />
+                            </div>
                         </div>
                     </div>
                 );
@@ -206,7 +332,7 @@ Weather = (function () {
         var Updater = React.createClass({
             render: function () {
                 return (
-                    <div className="update-time">
+                    <div className="update-time" onClick={unflip}>
                         Last updated {this.props.time}
                     </div>
                 );
@@ -224,14 +350,76 @@ Weather = (function () {
             }
         });
         
+        // reusable clone for flip-container during flip
+        /*var Clone = React.createClass({
+            getInitialState: function () {
+                return {
+                    object: null
+                };
+            },
+            componentWillReceiveProps: function () {
+                if (this.props.day) {
+                    var d = $(ReactDOM.findDOMNode(this.props.day)).find(".flip-container")[0];
+                    this.setState({
+                        object: d
+                    });
+                }
+            },
+            componentDidUpdate: function () {
+                var other = this.state.object;
+                if (other) {
+                    var el = $(ReactDOM.findDOMNode(this)).find(".flip-container")[0];
+                    el.offset({
+                        top: other.offset.top,
+                        left: other.offset.left
+                    });
+                    el.css({
+                        position: absolute
+                    });
+                }
+            },
+            render: function () {
+                // classes for flip-container clone
+                var cloneClass = classNames({
+                    'flip-container': true,
+                    'clone': true,
+                    //'flippy': this.state.isFlipped,
+                    //'hidden': !this.state.isFlipped
+                });
+                
+                if (this.props.day) {
+                    return (
+                        <div className={cloneClass}>
+                            <div className="flipper">
+                                <Front day={this.props.day.props.day} />
+                                <Back hours={this.props.day.props.hours} />
+                            </div>
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className={cloneClass}>
+                        </div>
+                    );
+                }
+            }
+        });*/
+        
         // parent component
         var WeatherCards = React.createClass({
             getInitialState: function () {
                 return {
+                    // show the intro
                     intro: true,
+                    // show the hourly view
+                    //hourly: false,
+                    // days in the forecast
                     days: [],
+                    // hours in the forecast
                     hours: [],
-                    time: ""
+                    // last updated time
+                    time: "",
+                    //chosenDay: null
                 }
             },
             getForecast: function () {
@@ -242,6 +430,7 @@ Weather = (function () {
                     intro: false
                 });
                 
+                // asynchronously retrieve the forecast
                 retrieveForecast().then(
                     function (forecast) {
                         console.log(forecast);
@@ -267,13 +456,19 @@ Weather = (function () {
                     this.getForecast();
                 }.bind(this), 120000);
             },
+            dayClick: function (clickedDay) {
+                /*this.setState({
+                    hourly: true
+                    //chosenDay: clickedDay
+                });*/
+            },
             render: function () {
                 // create dictionary of days to hours for each day
                 var hourList = {};
                 // determine which hours belong to each day
                 this.state.hours.forEach(function (hour) {
                     // build dictionary of days to hours
-                    var hourDate = formatDate(hour.time).getDay();
+                    var hourDate = formatDate(hour.time).getDate();
                     if (hourList[hourDate] !== undefined) {
                         hourList[hourDate].push(hour);
                     } else {
@@ -284,9 +479,9 @@ Weather = (function () {
                 // build days
                 var rows = [];
                 this.state.days.forEach(function (day) {
-                    var dayDate = formatDate(day.time).getDay();
-                    rows.push(<Flipper day={day} hours={hourList[dayDate]} key={day.time} />);
-                });
+                    var dayDate = formatDate(day.time).getDate();
+                    rows.push(<Flipper day={day} hours={hourList[dayDate]} dayClick={this.dayClick} key={day.time} />);
+                }.bind(this));
                 
                 // show intro state
                 if (this.state.intro) {
@@ -300,6 +495,7 @@ Weather = (function () {
                 }
                 // show forecast state
                 else {
+                            /*<Clone day={this.state.chosenDay} />*/
                     return (
                         <div>
                             <Refresher onClick={this.getForecast} />
@@ -310,7 +506,8 @@ Weather = (function () {
                 }
             }
         });
-         
+        
+        // time to render
         ReactDOM.render(
             <WeatherCards />,
             document.getElementById('container')
