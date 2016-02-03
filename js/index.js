@@ -19110,7 +19110,9 @@ Weather = (function () {
     
     // map forecast.io icons to weather icons
     var iconMap = {
+        'clear-day': 'wi-forecast-io-clear-day',
         'day-sunny': 'wi-forecast-io-clear-day',
+        'clear-night': 'wi-forecast-io-clear-night',
         'night-clear': 'wi-forecast-io-clear-night',
         'rain': 'wi-forecast-io-rain',
         'snow': 'wi-forecast-io-snow',
@@ -19304,9 +19306,9 @@ Weather = (function () {
                     React.createElement("div", {className: "hour-holder"}, 
                         React.createElement("p", null, timeStampHelper(this.props.hour.time)), 
                         React.createElement("p", null, this.props.hour.summary), 
-                        React.createElement("p", null, this.props.hour.icon), 
-                        React.createElement("p", null, this.props.hour.temperature), 
-                        React.createElement("p", null, "Feels like ", this.props.hour.apparentTemperature), 
+                        React.createElement("p", null, React.createElement("i", {className: convertIcon(this.props.hour.icon)})), 
+                        React.createElement("p", null, this.props.hour.temperature, "°"), 
+                        React.createElement("p", null, "Feels like ", this.props.hour.apparentTemperature, "°"), 
                         React.createElement("p", null, precip)
                     )
                 );

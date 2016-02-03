@@ -61,7 +61,9 @@ Weather = (function () {
     
     // map forecast.io icons to weather icons
     var iconMap = {
+        'clear-day': 'wi-forecast-io-clear-day',
         'day-sunny': 'wi-forecast-io-clear-day',
+        'clear-night': 'wi-forecast-io-clear-night',
         'night-clear': 'wi-forecast-io-clear-night',
         'rain': 'wi-forecast-io-rain',
         'snow': 'wi-forecast-io-snow',
@@ -255,9 +257,9 @@ Weather = (function () {
                     <div className="hour-holder">
                         <p>{timeStampHelper(this.props.hour.time)}</p>
                         <p>{this.props.hour.summary}</p>
-                        <p>{this.props.hour.icon}</p>
-                        <p>{this.props.hour.temperature}</p>
-                        <p>Feels like {this.props.hour.apparentTemperature}</p>
+                        <p><i className={convertIcon(this.props.hour.icon)}></i></p>
+                        <p>{this.props.hour.temperature}&deg;</p>
+                        <p>Feels like {this.props.hour.apparentTemperature}&deg;</p>
                         <p>{precip}</p>
                     </div>
                 );
