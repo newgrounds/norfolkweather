@@ -176,7 +176,7 @@ $anim-speed: 0.3s;
     &:before {
         content: "";
         display: block;
-        padding-top: 75%;
+        padding-top: 80%;
     }
 }
 
@@ -249,6 +249,12 @@ $anim-speed: 0.3s;
     .icon-line {
         font-size: 2em;
     }
+    .summary {
+        line-height: 1.5em;
+    }
+    .wi {
+        margin: 10px;
+    }
 }
 
 /* back, initially hidden pane */
@@ -274,3 +280,34 @@ $anim-speed: 0.3s;
     bottom: 0;
     color: #ddd;
 }
+
+.wi-forecast-io-clear-day {
+    color: #faf700;
+}
+.wi-forecast-io-cloudy {
+    color: #919191;
+}
+.wi-forecast-io-partly-cloudy-day {
+    color: #aaa97d;
+}
+.wi-forecast-io-partly-cloudy-night {
+    color: #6c63a8;
+}
+.wi-forecast-io-wind, .wi-day-windy {
+    color: #b5c1ff;
+}
+.wi-forecast-io-rain {
+    color: #56c7dd;
+}
+.wi-forecast-io-clear-night{
+    color: #7c49ff;
+}
+
+/*
+'snow': 'wi-forecast-io-snow',
+'sleet': 'wi-forecast-io-sleet',
+'fog': 'wi-forecast-io-fog',
+'hail': 'wi-forecast-io-hail',
+'thunderstorm': 'wi-forecast-io-thunderstorm',
+'tornado': 'wi-forecast-io-tornado'
+*/

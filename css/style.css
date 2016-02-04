@@ -137,7 +137,7 @@ html, body {
   .flipper:before {
     content: "";
     display: block;
-    padding-top: 75%; }
+    padding-top: 80%; }
 
 .flipper:hover {
   background: linear-gradient(rgba(30, 30, 36, 0.6), rgba(30, 30, 36, 0.4)); }
@@ -204,6 +204,10 @@ html, body {
     font-size: 2em; }
   .front .icon-line {
     font-size: 2em; }
+  .front .summary {
+    line-height: 1.5em; }
+  .front .wi {
+    margin: 10px; }
 
 /* back, initially hidden pane */
 .back {
@@ -225,3 +229,33 @@ html, body {
   text-align: center;
   bottom: 0;
   color: #ddd; }
+
+.wi-forecast-io-clear-day {
+  color: #faf700; }
+
+.wi-forecast-io-cloudy {
+  color: #919191; }
+
+.wi-forecast-io-partly-cloudy-day {
+  color: #aaa97d; }
+
+.wi-forecast-io-partly-cloudy-night {
+  color: #6c63a8; }
+
+.wi-forecast-io-wind, .wi-day-windy {
+  color: #b5c1ff; }
+
+.wi-forecast-io-rain {
+  color: #56c7dd; }
+
+.wi-forecast-io-clear-night {
+  color: #7c49ff; }
+
+/*
+'snow': 'wi-forecast-io-snow',
+'sleet': 'wi-forecast-io-sleet',
+'fog': 'wi-forecast-io-fog',
+'hail': 'wi-forecast-io-hail',
+'thunderstorm': 'wi-forecast-io-thunderstorm',
+'tornado': 'wi-forecast-io-tornado'
+*/

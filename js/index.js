@@ -19076,6 +19076,19 @@ Weather = (function () {
     function formatDate (ts) {
         return new Date(ts * 1000);
     }
+    // get day of week from ts
+    function getDay (ts) {
+        var d = formatDate(ts).getDay();
+        switch (d) {
+            case 0: return "Sunday";
+            case 1: return "Monday";
+            case 2: return "Tuesday";
+            case 3: return "Wednesday";
+            case 4: return "Thursday";
+            case 5: return "Friday";
+            case 6: return "Saturday";
+        }
+    }
     // convert ts to date and then format
     function timeStampHelper (ts) {
         return timeStamp(formatDate(ts));
@@ -19284,10 +19297,13 @@ Weather = (function () {
                     precip = toPercent(this.props.day.precipProbability) + "% chance of precipitation";
                 }
                 
+                var dayOfWeek = getDay(this.props.day.time);
+                
                 return (
                     React.createElement("div", {className: "front"}, 
-                        React.createElement("div", {className: "date-line"}, timeStampHelper(this.props.day.time).split(" ")[0]), 
-                        React.createElement("p", null, this.props.day.summary), 
+                        React.createElement("div", {className: "date-line"}, dayOfWeek), 
+                        React.createElement("p", null, timeStampHelper(this.props.day.time).split(" ")[0]), 
+                        React.createElement("p", {className: "summary"}, this.props.day.summary), 
                         React.createElement("div", {className: "icon-line"}, React.createElement("i", {className: convertIcon(this.props.day.icon)})), 
                         React.createElement("p", null, "High ", this.props.day.temperatureMax, "° @ ", timeStampHelper(this.props.day.temperatureMaxTime).split(" ").splice(1).join(" ")), 
                         React.createElement("p", null, "Low ", this.props.day.temperatureMin, "° @ ", timeStampHelper(this.props.day.temperatureMinTime).split(" ").splice(1).join(" ")), 
